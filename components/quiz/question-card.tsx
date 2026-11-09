@@ -48,17 +48,17 @@ export function QuestionCard({
 
   return (
     <div>
-      <div className="mb-6">
-        <p className="text-lg font-medium leading-relaxed">{question.question}</p>
+      <div className="mb-4">
+        <p className="text-base font-medium leading-relaxed">{question.question}</p>
         {question.isMultiAnswer && (
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-1.5 text-xs text-muted-foreground">
             Select {correctAnswers.length} answers
           </p>
         )}
       </div>
 
-      <div className="space-y-3">
-        {optionKeys.map((key) => {
+      <div className="space-y-2">
+        {optionKeys.map((key, index) => {
           const state = getOptionState(key);
           const isSelected = selectedAnswers.includes(key);
           const Icon = question.isMultiAnswer
@@ -71,22 +71,22 @@ export function QuestionCard({
               onClick={() => handleOptionClick(key)}
               disabled={disabled || showResult}
               className={cn(
-                "flex w-full items-start gap-3 rounded-lg border p-4 text-left transition-all",
+                "flex w-full items-start gap-2.5 rounded-lg border p-3 text-left text-sm transition-all",
                 state === "default" && "border-border hover:border-muted-foreground/30 hover:bg-muted/50",
                 state === "selected" && "border-primary bg-primary/5",
-                state === "correct" && "border-success bg-success/5",
-                state === "incorrect" && "border-danger bg-danger/5",
+                state === "correct" && "border-success bg-success/5 border-l-3 border-l-success",
+                state === "incorrect" && "border-danger bg-danger/5 border-l-3 border-l-danger",
                 (disabled || showResult) && "cursor-default"
               )}
             >
               <div className="mt-0.5 shrink-0">
                 {showResult && state === "correct" ? (
-                  <CheckCircle2 className="h-5 w-5 text-success" />
+                  <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : showResult && state === "incorrect" ? (
-                  <XCircle className="h-5 w-5 text-danger" />
+                  <XCircle className="h-4 w-4 text-danger" />
                 ) : (
                   <Icon className={cn(
-                    "h-5 w-5",
+                    "h-4 w-4",
                     isSelected ? "text-primary" : "text-muted-foreground"
                   )} />
                 )}
@@ -95,15 +95,20 @@ export function QuestionCard({
                 <span className="font-medium text-muted-foreground">{key}.</span>{" "}
                 <span>{question.options[key]}</span>
               </div>
+              {!showResult && !disabled && (
+                <kbd className="ml-auto shrink-0 self-center rounded bg-muted px-1 py-0.5 font-mono text-[10px] text-muted-foreground">
+                  {index + 1}
+                </kbd>
+              )}
             </button>
           );
         })}
       </div>
 
       {showResult && question.explanation && (
-        <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-4">
-          <p className="text-sm font-medium text-primary">Explanation</p>
-          <p className="mt-1 text-sm text-muted-foreground">{question.explanation}</p>
+        <div className="mt-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
+          <p className="text-xs font-medium text-primary">Explanation</p>
+          <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{question.explanation}</p>
         </div>
       )}
     </div>

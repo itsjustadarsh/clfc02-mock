@@ -4,7 +4,7 @@ import { useState } from "react";
 import { selectExamQuestions } from "@/lib/questions";
 import { QuizEngine } from "@/components/quiz/quiz-engine";
 import type { Question } from "@/lib/types";
-import { ClipboardList, Timer, HelpCircle, Target } from "lucide-react";
+import { ClipboardList, ShieldAlert } from "lucide-react";
 
 export default function ExamPage() {
   const [started, setStarted] = useState(false);
@@ -19,40 +19,41 @@ export default function ExamPage() {
 
   if (!started) {
     return (
-      <div className="mx-auto max-w-lg px-4 py-12">
-        <div className="rounded-xl border bg-card p-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
-            <ClipboardList className="h-8 w-8 text-primary" />
+      <div className="mx-auto max-w-md px-4 py-10 animate-fade-in">
+        <div className="rounded-xl border bg-card p-6 text-center">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+            <ClipboardList className="h-7 w-7 text-primary" />
           </div>
-          <h1 className="mb-2 text-2xl font-bold">Full Mock Exam</h1>
-          <p className="mb-6 text-muted-foreground">
-            Simulate the real AWS CLF-C02 exam experience.
-          </p>
+          <h1 className="mb-1 text-xl font-bold">Full Mock Exam</h1>
 
-          <div className="mb-6 grid grid-cols-3 gap-4 text-sm">
-            <div className="flex flex-col items-center gap-1">
-              <HelpCircle className="h-5 w-5 text-muted-foreground" />
-              <span className="font-medium">65</span>
-              <span className="text-muted-foreground">Questions</span>
+          <div className="my-4 flex items-center justify-center gap-6 text-sm">
+            <div>
+              <span className="font-bold">65</span>{" "}
+              <span className="text-muted-foreground">Qs</span>
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <Timer className="h-5 w-5 text-muted-foreground" />
-              <span className="font-medium">90 min</span>
-              <span className="text-muted-foreground">Time Limit</span>
+            <div className="h-4 w-px bg-border" />
+            <div>
+              <span className="font-bold">90</span>{" "}
+              <span className="text-muted-foreground">min</span>
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <Target className="h-5 w-5 text-muted-foreground" />
-              <span className="font-medium">70%</span>
-              <span className="text-muted-foreground">To Pass</span>
+            <div className="h-4 w-px bg-border" />
+            <div>
+              <span className="font-bold">70%</span>{" "}
+              <span className="text-muted-foreground">pass</span>
             </div>
           </div>
 
           <button
             onClick={startExam}
-            className="w-full rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+            className="mb-3 w-full rounded-lg bg-primary px-6 py-2.5 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Start Exam
           </button>
+
+          <div className="flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+            <ShieldAlert className="h-3 w-3" />
+            Tab switching and copy/paste are monitored
+          </div>
         </div>
       </div>
     );
@@ -65,6 +66,7 @@ export default function ExamPage() {
         questions={questions}
         mode="exam"
         timeLimit={5400}
+        antiCheat
         onRetry={startExam}
       />
     </div>

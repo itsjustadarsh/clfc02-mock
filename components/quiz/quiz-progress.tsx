@@ -7,21 +7,21 @@ interface QuizProgressProps {
 }
 
 export function QuizProgress({ current, total, answered }: QuizProgressProps) {
-  const percent = ((current + 1) / total) * 100;
+  const percent = Math.round(((current + 1) / total) * 100);
 
   return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between text-sm">
+    <div className="min-w-0 flex-1 space-y-1">
+      <div className="flex items-center justify-between text-xs">
         <span className="font-medium">
-          Question {current + 1} of {total}
+          Q {current + 1}/{total}
         </span>
         <span className="text-muted-foreground">
-          {answered} answered
+          {answered} answered ({Math.round((answered / total) * 100)}%)
         </span>
       </div>
-      <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+      <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
         <div
-          className="h-full rounded-full bg-primary transition-all duration-300"
+          className="h-full rounded-full bg-gradient-to-r from-primary to-primary/70 transition-all duration-300"
           style={{ width: `${percent}%` }}
         />
       </div>

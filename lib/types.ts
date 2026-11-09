@@ -92,6 +92,8 @@ export interface QuizAttempt {
   answers: UserAnswer[];
   questionIds: string[];
   domainBreakdown: DomainScore[];
+  violations?: number;
+  flaggedIds?: string[];
 }
 
 export interface DomainScore {

@@ -20,24 +20,22 @@ export default function QuickQuizPage() {
 
   if (!started) {
     return (
-      <div className="mx-auto max-w-lg px-4 py-12">
-        <div className="rounded-xl border bg-card p-8 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-500/10">
-            <Zap className="h-8 w-8 text-green-500" />
+      <div className="mx-auto max-w-md px-4 py-10 animate-fade-in">
+        <div className="rounded-xl border bg-card p-6 text-center">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-green-500/10">
+            <Zap className="h-7 w-7 text-green-500" />
           </div>
-          <h1 className="mb-2 text-2xl font-bold">Quick Quiz</h1>
-          <p className="mb-6 text-muted-foreground">
-            Random questions from all domains. No timer.
-          </p>
+          <h1 className="mb-1 text-xl font-bold">Quick Quiz</h1>
+          <p className="mb-4 text-sm text-muted-foreground">Random questions, no timer.</p>
 
-          <div className="mb-6">
-            <p className="mb-3 text-sm font-medium">How many questions?</p>
-            <div className="flex justify-center gap-2">
+          <div className="mb-5">
+            <p className="mb-2 text-sm font-medium">Questions</p>
+            <div className="flex justify-center gap-1.5">
               {[10, 15, 20, 30].map((c) => (
                 <button
                   key={c}
                   onClick={() => setCount(c)}
-                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`rounded-lg border px-3.5 py-1.5 text-sm font-medium transition-colors ${
                     count === c
                       ? "border-primary bg-primary/10 text-primary"
                       : "hover:bg-muted"
@@ -51,7 +49,7 @@ export default function QuickQuizPage() {
 
           <button
             onClick={start}
-            className="w-full rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+            className="w-full rounded-lg bg-primary px-6 py-2.5 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Start Quiz
           </button>

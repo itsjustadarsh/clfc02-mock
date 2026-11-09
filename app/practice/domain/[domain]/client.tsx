@@ -32,26 +32,25 @@ export function DomainPracticeClient({ domainId }: { domainId: number }) {
     const counts = [20, 30, 50, domain.questionCount];
 
     return (
-      <div className="mx-auto max-w-lg px-4 py-12">
-        <div className="rounded-xl border bg-card p-8 text-center">
-          <h1 className="mb-2 text-2xl font-bold">
-            Domain {domain.id}: {domain.name}
+      <div className="mx-auto max-w-md px-4 py-10 animate-fade-in">
+        <div className="rounded-xl border bg-card p-6 text-center">
+          <h1 className="mb-1 text-xl font-bold">
+            Domain {domain.id}: {domain.shortName}
           </h1>
-          <p className="mb-6 text-muted-foreground">
-            {domain.questionCount} questions available &middot;{" "}
-            {Math.round(domain.weight * 100)}% of exam
+          <p className="mb-4 text-sm text-muted-foreground">
+            {domain.questionCount} Qs · {Math.round(domain.weight * 100)}% of exam
           </p>
 
-          <div className="mb-6">
-            <p className="mb-3 text-sm font-medium">How many questions?</p>
-            <div className="flex flex-wrap justify-center gap-2">
+          <div className="mb-5">
+            <p className="mb-2 text-sm font-medium">Questions</p>
+            <div className="flex flex-wrap justify-center gap-1.5">
               {counts.map((c) => (
                 <button
                   key={c}
                   onClick={() =>
                     setCount(c === domain.questionCount ? undefined : c)
                   }
-                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`rounded-lg border px-3.5 py-1.5 text-sm font-medium transition-colors ${
                     count === c ||
                     (count === undefined && c === domain.questionCount)
                       ? "border-primary bg-primary/10 text-primary"
@@ -66,7 +65,7 @@ export function DomainPracticeClient({ domainId }: { domainId: number }) {
 
           <button
             onClick={start}
-            className="w-full rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
+            className="w-full rounded-lg bg-primary px-6 py-2.5 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Start Practice
           </button>

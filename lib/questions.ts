@@ -59,3 +59,8 @@ export function selectDomainQuestions(domain: number, count?: number): Question[
 export function selectQuickQuiz(count: number = 15): Question[] {
   return shuffleArray(getAllQuestions()).slice(0, count);
 }
+
+export function selectFlashcards(domain?: number, count: number = 20): Question[] {
+  const pool = domain ? (domainData[domain] ?? []) : getAllQuestions();
+  return shuffleArray(pool).slice(0, count);
+}

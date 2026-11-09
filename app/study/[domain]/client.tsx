@@ -44,29 +44,29 @@ export function StudyDomainClient({ domainId }: { domainId: number }) {
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-6">
+    <div className="mx-auto max-w-5xl px-4 py-6 animate-fade-in">
       <Link
         href="/study"
-        className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+        className="mb-3 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" />
+        <ArrowLeft className="h-3.5 w-3.5" />
         All Domains
       </Link>
 
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold sm:text-3xl">
+      <div className="mb-5">
+        <h1 className="text-xl font-bold sm:text-2xl">
           Domain {domain.id}: {domain.name}
         </h1>
-        <p className="mt-1 text-muted-foreground">
-          {Math.round(domain.weight * 100)}% of exam &middot; {domain.description}
+        <p className="mt-0.5 text-xs text-muted-foreground">
+          {Math.round(domain.weight * 100)}% of exam · {domain.questionCount} questions
         </p>
       </div>
 
       <div className="flex gap-6">
-        {/* Sidebar TOC - desktop only */}
-        <aside className="hidden w-56 shrink-0 lg:block">
-          <div className="sticky top-20">
-            <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        {/* Sidebar TOC */}
+        <aside className="hidden w-48 shrink-0 lg:block">
+          <div className="sticky top-16">
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Topics
             </p>
             <nav className="space-y-0.5">
@@ -76,10 +76,10 @@ export function StudyDomainClient({ domainId }: { domainId: number }) {
                   href={`#${topic.slug}`}
                   onClick={() => setActiveTopic(topic.slug)}
                   className={cn(
-                    "block rounded-lg px-3 py-1.5 text-sm transition-colors",
+                    "block rounded-r-lg border-l-2 px-3 py-1.5 text-xs transition-colors",
                     activeTopic === topic.slug
-                      ? "bg-primary/10 font-medium text-primary"
-                      : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                      ? "border-l-primary bg-primary/5 font-medium text-primary"
+                      : "border-l-transparent text-muted-foreground hover:border-l-muted-foreground/30 hover:text-foreground"
                   )}
                 >
                   {topic.title}
@@ -90,11 +90,11 @@ export function StudyDomainClient({ domainId }: { domainId: number }) {
         </aside>
 
         {/* Main content */}
-        <div className="min-w-0 flex-1 space-y-8">
+        <div className="min-w-0 flex-1 space-y-6">
           {topics.map((topic) => (
             <div key={topic.slug} id={topic.slug}>
-              <h2 className="mb-4 text-xl font-bold">{topic.title}</h2>
-              <div className="space-y-3">
+              <h2 className="mb-3 text-lg font-bold">{topic.title}</h2>
+              <div className="space-y-2">
                 {topic.sections.map((section, i) => (
                   <TopicSection key={i} section={section} />
                 ))}
@@ -103,16 +103,16 @@ export function StudyDomainClient({ domainId }: { domainId: number }) {
           ))}
 
           {topics.length > 0 && (
-            <div className="rounded-xl border bg-primary/5 p-6 text-center">
-              <h3 className="mb-2 text-lg font-semibold">Ready to practice?</h3>
-              <p className="mb-4 text-sm text-muted-foreground">
-                Test your knowledge of {domain.name} with practice questions.
+            <div className="rounded-xl border bg-primary/5 p-5 text-center">
+              <h3 className="mb-1 text-base font-semibold">Ready to practice?</h3>
+              <p className="mb-3 text-xs text-muted-foreground">
+                Test your {domain.name} knowledge.
               </p>
               <Link
                 href={`/practice/domain/${domain.id}`}
-                className="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-2.5 font-medium text-primary-foreground hover:bg-primary/90"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-primary px-5 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
               >
-                <ClipboardList className="h-4 w-4" />
+                <ClipboardList className="h-3.5 w-3.5" />
                 Practice Domain {domain.id}
               </Link>
             </div>

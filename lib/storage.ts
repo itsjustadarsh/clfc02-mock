@@ -35,3 +35,29 @@ export function clearHistory(): void {
 export function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
 }
+
+export function getStreak(): number {
+  const attempts = getAttempts();
+  if (attempts.length === 0) return 0;
+
+  const days = new Set(
+    attempts.map((a) => new Date(a.date).toDateString())
+  );
+
+  let streak = 0;
+  const today = new Date();
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    if (days.has(d.toDateString())) {
+      streak++;
+    } else if (i > 0) {
+      break;
+    }
+  }
+  return streak;
+}
+
+export function getTotalQuestionsAnswered(): number {
+  return getAttempts().reduce((sum, a) => sum + a.totalQuestions, 0);
+}

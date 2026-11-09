@@ -7,7 +7,7 @@ import { DOMAINS } from "@/lib/types";
 import { getAttempt } from "@/lib/storage";
 import { getQuestionById } from "@/lib/questions";
 import { QuestionCard } from "@/components/quiz/question-card";
-import { ArrowLeft, Filter } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ReviewFilter = "all" | "wrong" | "correct";
@@ -35,7 +35,7 @@ export function ReviewClient({ attemptId }: { attemptId: string }) {
         <h1 className="text-2xl font-bold">Attempt not found</h1>
         <Link
           href="/history"
-          className="mt-4 inline-block text-primary hover:underline"
+          className="mt-4 inline-block text-sm text-primary hover:underline"
         >
           Back to History
         </Link>
@@ -57,84 +57,100 @@ export function ReviewClient({ attemptId }: { attemptId: string }) {
   const correctCount = attempt.answers.filter((a) => a.isCorrect).length;
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-6">
-      <div className="mb-6">
+    <div className="mx-auto max-w-3xl px-4 py-6 animate-fade-in">
+      {/* Header */}
+      <div className="mb-4">
         <Link
           href="/history"
-          className="mb-4 inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+          className="mb-3 inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft className="h-4 w-4" />
-          Back to History
+          <ArrowLeft className="h-3.5 w-3.5" />
+          History
         </Link>
-        <h1 className="text-2xl font-bold">Review Answers</h1>
-        <p className="text-muted-foreground">
-          Score: {attempt.score}% &middot; {attempt.correctCount}/
-          {attempt.totalQuestions} correct
-        </p>
+        <h1 className="text-xl font-bold">Review Answers</h1>
       </div>
 
-      <div className="mb-6 flex flex-wrap items-center gap-2">
-        <Filter className="h-4 w-4 text-muted-foreground" />
-        {(["all", "wrong", "correct"] as ReviewFilter[]).map((f) => (
+      {/* Sticky summary */}
+      <div className="sticky top-12 z-40 -mx-4 mb-4 border-b bg-background/95 px-4 py-2 backdrop-blur-sm">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-medium">
+            <span className={attempt.passed ? "text-success" : "text-danger"}>
+              {attempt.score}%
+            </span>
+            {" · "}{attempt.correctCount}/{attempt.totalQuestions} correct
+          </span>
+          <span className="text-muted-foreground">
+            {filteredQuestions.length} showing
+          </span>
+        </div>
+      </div>
+
+      {/* Filters — segmented control style */}
+      <div className="mb-5 flex flex-wrap items-center gap-1.5">
+        <div className="inline-flex overflow-hidden rounded-lg border">
+          {(["all", "wrong", "correct"] as ReviewFilter[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={cn(
+                "px-2.5 py-1.5 text-xs font-medium transition-colors",
+                filter === f
+                  ? "bg-primary/10 text-primary"
+                  : "hover:bg-muted",
+                f !== "all" && "border-l"
+              )}
+            >
+              {f === "all"
+                ? `All (${questions.length})`
+                : f === "wrong"
+                  ? `Wrong (${wrongCount})`
+                  : `Correct (${correctCount})`}
+            </button>
+          ))}
+        </div>
+
+        <div className="inline-flex overflow-hidden rounded-lg border">
           <button
-            key={f}
-            onClick={() => setFilter(f)}
+            onClick={() => setDomainFilter(null)}
             className={cn(
-              "rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors",
-              filter === f
-                ? "border-primary bg-primary/10 text-primary"
+              "px-2.5 py-1.5 text-xs font-medium transition-colors",
+              domainFilter === null
+                ? "bg-primary/10 text-primary"
                 : "hover:bg-muted"
             )}
           >
-            {f === "all"
-              ? `All (${questions.length})`
-              : f === "wrong"
-                ? `Wrong (${wrongCount})`
-                : `Correct (${correctCount})`}
+            All
           </button>
-        ))}
-        <span className="mx-1 text-border">|</span>
-        <button
-          onClick={() => setDomainFilter(null)}
-          className={cn(
-            "rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors",
-            domainFilter === null
-              ? "border-primary bg-primary/10 text-primary"
-              : "hover:bg-muted"
-          )}
-        >
-          All Domains
-        </button>
-        {DOMAINS.map((d) => (
-          <button
-            key={d.id}
-            onClick={() => setDomainFilter(d.id)}
-            className={cn(
-              "rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors",
-              domainFilter === d.id
-                ? "border-primary bg-primary/10 text-primary"
-                : "hover:bg-muted"
-            )}
-          >
-            D{d.id}
-          </button>
-        ))}
+          {DOMAINS.map((d) => (
+            <button
+              key={d.id}
+              onClick={() => setDomainFilter(d.id)}
+              className={cn(
+                "border-l px-2.5 py-1.5 text-xs font-medium transition-colors",
+                domainFilter === d.id
+                  ? "bg-primary/10 text-primary"
+                  : "hover:bg-muted"
+              )}
+            >
+              D{d.id}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <div className="space-y-6">
+      {/* Questions */}
+      <div className="space-y-4">
         {filteredQuestions.map((q, i) => {
           const answer = answerMap.get(q.id);
           return (
-            <div key={q.id} className="rounded-xl border bg-card p-6">
-              <div className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
+            <div key={q.id} className="rounded-xl border bg-card p-4">
+              <div className="mb-2 flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 <span>Q{i + 1}</span>
-                <span>&middot;</span>
-                <span>Domain {q.domain}</span>
-                <span>&middot;</span>
+                <span>·</span>
+                <span>D{q.domain}</span>
+                <span>·</span>
                 <span
-                  className={
-                    answer?.isCorrect ? "text-success" : "text-danger"
-                  }
+                  className={answer?.isCorrect ? "text-success" : "text-danger"}
                 >
                   {answer?.isCorrect ? "Correct" : "Wrong"}
                 </span>
@@ -150,7 +166,7 @@ export function ReviewClient({ attemptId }: { attemptId: string }) {
           );
         })}
         {filteredQuestions.length === 0 && (
-          <p className="py-8 text-center text-muted-foreground">
+          <p className="py-8 text-center text-sm text-muted-foreground">
             No questions match the current filter.
           </p>
         )}
