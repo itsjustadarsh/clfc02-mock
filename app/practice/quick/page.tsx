@@ -24,25 +24,23 @@ export default function QuickQuizPage() {
   if (!started) {
     return (
       <div className="mx-auto max-w-md px-4 py-10 animate-fade-in">
-        <div className="rounded-2xl border bg-card p-6 text-center">
-          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-500/10">
-            <Zap className="h-8 w-8 text-green-500" />
+        <div className="rounded-xl border bg-card p-6 text-center">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-success/10">
+            <Zap className="h-7 w-7 text-success" />
           </div>
-          <h1 className="mb-1 text-xl font-extrabold">Quick Quiz</h1>
+          <h1 className="mb-1 text-lg font-semibold">Quick Quiz</h1>
           <p className="mb-4 text-sm text-muted-foreground">Random questions, no timer.</p>
 
           <div className="mb-5">
-            <p className="mb-2 text-sm font-bold">Questions</p>
+            <p className="mb-2 text-sm font-medium">Questions</p>
             <div className="flex justify-center gap-2">
               {[10, 15, 20, 30].map((c) => (
                 <button
                   key={c}
                   onClick={() => { playClick(); setCount(c); }}
                   className={cn(
-                    "btn-3d rounded-xl px-4 py-2 text-sm font-bold transition-all",
-                    count === c
-                      ? "bg-primary text-white btn-shadow-primary"
-                      : "bg-muted btn-shadow-secondary"
+                    "btn rounded-lg px-4 py-2 text-sm",
+                    count === c ? "btn-primary" : "btn-secondary"
                   )}
                 >
                   {c}

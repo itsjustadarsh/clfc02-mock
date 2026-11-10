@@ -51,15 +51,15 @@ export function QuestionCard({
   return (
     <div>
       <div className="mb-4">
-        <p className="text-base font-bold leading-relaxed">{question.question}</p>
+        <p className="text-sm font-medium leading-relaxed sm:text-base">{question.question}</p>
         {question.isMultiAnswer && (
-          <p className="mt-1.5 text-xs font-medium text-muted-foreground">
+          <p className="mt-1.5 text-xs text-muted-foreground">
             Select {correctAnswers.length} answers
           </p>
         )}
       </div>
 
-      <div className="space-y-2.5">
+      <div className="space-y-2">
         {optionKeys.map((key, index) => {
           const state = getOptionState(key);
           const isSelected = selectedAnswers.includes(key);
@@ -73,7 +73,7 @@ export function QuestionCard({
               onClick={() => handleOptionClick(key)}
               disabled={disabled || showResult}
               className={cn(
-                "option-3d flex w-full items-start gap-3 p-3.5 text-left text-sm",
+                "option-btn flex w-full items-start gap-3 p-3 text-left text-sm",
                 state === "selected" && "selected",
                 state === "correct" && "correct",
                 state === "incorrect" && "incorrect",
@@ -82,22 +82,19 @@ export function QuestionCard({
             >
               <div className="mt-0.5 shrink-0">
                 {showResult && state === "correct" ? (
-                  <CheckCircle2 className="h-4.5 w-4.5 text-success" />
+                  <CheckCircle2 className="h-4 w-4 text-success" />
                 ) : showResult && state === "incorrect" ? (
-                  <XCircle className="h-4.5 w-4.5 text-danger" />
+                  <XCircle className="h-4 w-4 text-danger" />
                 ) : (
-                  <Icon className={cn(
-                    "h-4.5 w-4.5",
-                    isSelected ? "text-primary" : "text-muted-foreground"
-                  )} />
+                  <Icon className={cn("h-4 w-4", isSelected ? "text-primary" : "text-muted-foreground")} />
                 )}
               </div>
               <div className="flex-1">
-                <span className="font-bold text-muted-foreground">{key}.</span>{" "}
-                <span className="font-medium">{question.options[key]}</span>
+                <span className="font-medium text-muted-foreground">{key}.</span>{" "}
+                {question.options[key]}
               </div>
               {!showResult && !disabled && (
-                <kbd className="ml-auto shrink-0 self-center rounded-lg bg-muted px-1.5 py-0.5 font-mono text-[10px] font-bold text-muted-foreground">
+                <kbd className="ml-auto shrink-0 self-center rounded bg-muted px-1.5 py-0.5 font-mono text-[10px] text-muted-foreground">
                   {index + 1}
                 </kbd>
               )}
@@ -107,8 +104,8 @@ export function QuestionCard({
       </div>
 
       {showResult && question.explanation && (
-        <div className="mt-3 rounded-2xl border border-primary/20 bg-primary/5 p-3">
-          <p className="text-xs font-bold text-primary">Explanation</p>
+        <div className="mt-3 rounded-xl border border-primary/20 bg-primary/5 p-3">
+          <p className="text-xs font-medium text-primary">Explanation</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{question.explanation}</p>
         </div>
       )}

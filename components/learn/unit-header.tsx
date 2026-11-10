@@ -3,11 +3,11 @@
 import type { Unit } from "@/lib/lessons";
 import { cn } from "@/lib/utils";
 
-const domainColors: Record<string, { bg: string; text: string; border: string }> = {
-  blue: { bg: "bg-blue-500", text: "text-white", border: "border-blue-400" },
-  red: { bg: "bg-red-500", text: "text-white", border: "border-red-400" },
-  green: { bg: "bg-green-500", text: "text-white", border: "border-green-400" },
-  orange: { bg: "bg-amber-500", text: "text-white", border: "border-amber-400" },
+const domainStyles: Record<string, string> = {
+  blue: "from-cyan-600 to-cyan-500",
+  red: "from-rose-600 to-rose-500",
+  green: "from-emerald-600 to-emerald-500",
+  orange: "from-amber-600 to-amber-500",
 };
 
 interface UnitHeaderProps {
@@ -16,28 +16,26 @@ interface UnitHeaderProps {
 }
 
 export function UnitHeader({ unit, index }: UnitHeaderProps) {
-  const colors = domainColors[unit.color] ?? domainColors.blue;
+  const gradient = domainStyles[unit.color] ?? domainStyles.blue;
   const pct = unit.progress.total > 0
     ? Math.round((unit.progress.completed / unit.progress.total) * 100)
     : 0;
 
   return (
     <div className={cn(
-      "mx-auto w-full max-w-sm rounded-2xl p-4 text-center",
-      colors.bg, colors.text,
-      "shadow-[0_4px_0] shadow-black/20"
+      "mx-auto w-full max-w-sm rounded-xl bg-gradient-to-r p-4 text-center text-white",
+      gradient
     )}>
-      <div className="text-xs font-bold uppercase tracking-wider opacity-80">
+      <div className="text-[10px] font-medium uppercase tracking-wider opacity-70">
         Unit {index + 1}
       </div>
-      <h3 className="mt-1 text-lg font-extrabold">{unit.name}</h3>
-      <div className="mt-2 flex items-center justify-center gap-2 text-xs font-bold">
+      <h3 className="mt-0.5 text-base font-semibold">{unit.name}</h3>
+      <div className="mt-1.5 flex items-center justify-center gap-2 text-xs opacity-80">
         <span>{unit.progress.completed}/{unit.progress.total} lessons</span>
-        <span className="opacity-60">·</span>
+        <span>·</span>
         <span>{Math.round(unit.weight * 100)}% of exam</span>
       </div>
-      {/* Progress bar */}
-      <div className="mx-auto mt-2 h-2 w-3/4 overflow-hidden rounded-full bg-black/20">
+      <div className="mx-auto mt-2 h-1.5 w-3/4 overflow-hidden rounded-full bg-white/20">
         <div
           className="h-full rounded-full bg-white/80 transition-all duration-500"
           style={{ width: `${pct}%` }}

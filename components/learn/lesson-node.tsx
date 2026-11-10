@@ -23,11 +23,9 @@ export function LessonNode({ lesson, progress, unlocked, onClick, position }: Le
     onClick();
   }
 
-  // Position offsets for the zigzag path
   const offsetClass =
     position === "left" ? "-translate-x-12 sm:-translate-x-16" :
-    position === "right" ? "translate-x-12 sm:translate-x-16" :
-    "";
+    position === "right" ? "translate-x-12 sm:translate-x-16" : "";
 
   return (
     <div className={cn("flex flex-col items-center", offsetClass)}>
@@ -35,34 +33,29 @@ export function LessonNode({ lesson, progress, unlocked, onClick, position }: Le
         onClick={handleClick}
         disabled={!unlocked}
         className={cn(
-          "lesson-node",
+          "lesson-bubble",
           !unlocked && "locked",
           isCompleted && "bg-success text-white",
-          !isCompleted && unlocked && "bg-primary text-white",
+          !isCompleted && unlocked && "bg-primary text-white available",
           !unlocked && "bg-muted text-muted-foreground",
-          // Shadow
-          isCompleted && "shadow-[0_4px_0_#16a34a]",
-          !isCompleted && unlocked && "shadow-[0_4px_0_#7c22ce]",
-          !unlocked && "shadow-[0_4px_0_var(--border)]",
         )}
       >
         {!unlocked ? (
-          <Lock className="h-6 w-6" />
+          <Lock className="h-5 w-5" />
         ) : isCompleted ? (
-          <Check className="h-7 w-7" strokeWidth={3} />
+          <Check className="h-6 w-6" strokeWidth={2.5} />
         ) : (
-          <Play className="h-6 w-6 ml-0.5" fill="currentColor" />
+          <Play className="h-5 w-5 ml-0.5" fill="currentColor" />
         )}
 
-        {/* Stars */}
         {isCompleted && stars > 0 && (
           <div className="star-row">
             {[1, 2, 3].map((s) => (
               <Star
                 key={s}
                 className={cn(
-                  "h-3.5 w-3.5",
-                  s <= stars ? "text-xp fill-xp" : "text-muted-foreground/30"
+                  "h-3 w-3",
+                  s <= stars ? "text-xp fill-xp" : "text-muted-foreground/20"
                 )}
               />
             ))}
@@ -70,10 +63,9 @@ export function LessonNode({ lesson, progress, unlocked, onClick, position }: Le
         )}
       </button>
 
-      {/* Label */}
       <span className={cn(
-        "mt-3 text-xs font-bold",
-        !unlocked && "text-muted-foreground/50",
+        "mt-2.5 text-[11px] font-medium",
+        !unlocked && "text-muted-foreground/40",
         isCompleted && "text-success",
         !isCompleted && unlocked && "text-primary",
       )}>

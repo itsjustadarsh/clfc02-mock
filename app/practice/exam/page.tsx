@@ -21,25 +21,25 @@ export default function ExamPage() {
   if (!started) {
     return (
       <div className="mx-auto max-w-md px-4 py-10 animate-fade-in">
-        <div className="rounded-2xl border bg-card p-6 text-center">
-          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-primary/10">
-            <ClipboardList className="h-8 w-8 text-primary" />
+        <div className="rounded-xl border bg-card p-6 text-center">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-accent/10">
+            <ClipboardList className="h-7 w-7 text-accent" />
           </div>
-          <h1 className="mb-1 text-xl font-extrabold">Full Mock Exam</h1>
+          <h1 className="mb-1 text-lg font-semibold">Full Mock Exam</h1>
 
           <div className="my-4 flex items-center justify-center gap-6 text-sm">
             <div>
-              <span className="text-lg font-extrabold">65</span>{" "}
+              <span className="text-lg font-semibold">65</span>{" "}
               <span className="text-muted-foreground">Qs</span>
             </div>
             <div className="h-4 w-px bg-border" />
             <div>
-              <span className="text-lg font-extrabold">90</span>{" "}
+              <span className="text-lg font-semibold">90</span>{" "}
               <span className="text-muted-foreground">min</span>
             </div>
             <div className="h-4 w-px bg-border" />
             <div>
-              <span className="text-lg font-extrabold">70%</span>{" "}
+              <span className="text-lg font-semibold">70%</span>{" "}
               <span className="text-muted-foreground">pass</span>
             </div>
           </div>
@@ -59,14 +59,7 @@ export default function ExamPage() {
 
   return (
     <div className="px-4 py-6">
-      <QuizEngine
-        key={key}
-        questions={questions}
-        mode="exam"
-        timeLimit={5400}
-        antiCheat
-        onRetry={startExam}
-      />
+      <QuizEngine key={key} questions={questions} mode="exam" timeLimit={5400} antiCheat onRetry={startExam} />
     </div>
   );
 }

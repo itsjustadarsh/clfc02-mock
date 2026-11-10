@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Cloud, BookOpen, GraduationCap, LayoutDashboard, Menu, X, ExternalLink, Flame, Star } from "lucide-react";
+import { Cloud, BookOpen, GraduationCap, LayoutDashboard, ClipboardList, Menu, X, ExternalLink, Flame, Star } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { SoundToggle } from "./ui/sound-toggle";
 import { cn } from "@/lib/utils";
@@ -12,7 +12,7 @@ import { migrateExistingData, getLevelForXP } from "@/lib/gamification";
 
 const links = [
   { href: "/learn", label: "Learn", icon: GraduationCap },
-  { href: "/study", label: "Study", icon: BookOpen },
+  { href: "/practice", label: "Practice", icon: ClipboardList },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];
 
@@ -32,75 +32,75 @@ export function Nav() {
   }, [pathname]);
 
   return (
-    <nav className="glass sticky top-0 z-50" style={{ boxShadow: "var(--shadow-sm)" }}>
+    <nav className="glass sticky top-0 z-50">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-extrabold" onClick={() => setMobileOpen(false)}>
+        <Link href="/" className="flex items-center gap-2 font-semibold" onClick={() => setMobileOpen(false)}>
           <Cloud className="h-5 w-5 text-primary" />
           <span className="text-sm">CLF-C02</span>
         </Link>
 
-        <div className="hidden items-center gap-0.5 sm:flex">
-          {links.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={cn(
-                "btn-3d flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-bold transition-all",
-                pathname.startsWith(href)
-                  ? "bg-primary/15 text-primary shadow-[0_3px_0_#7c22ce30]"
-                  : "text-muted-foreground hover:bg-muted shadow-[0_3px_0_transparent]"
-              )}
-            >
-              <Icon className="h-4 w-4" />
-              {label}
-            </Link>
-          ))}
+        <div className="hidden items-center gap-1 sm:flex">
+          {links.map(({ href, label, icon: Icon }) => {
+            const active = pathname === href || (href !== "/" && pathname.startsWith(href));
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  "flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+                  active
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </Link>
+            );
+          })}
 
-          {/* Gamification indicators */}
           {level > 0 && (
             <>
-              <div className="mx-1.5 h-5 w-px bg-border" />
-              <div className="flex items-center gap-2.5 px-1">
+              <div className="mx-2 h-4 w-px bg-border" />
+              <div className="flex items-center gap-2">
                 {streak > 0 && (
-                  <div className="flex items-center gap-0.5 text-xs font-extrabold text-streak">
-                    <Flame className="h-4 w-4 animate-streak-glow" />
+                  <span className="flex items-center gap-0.5 text-xs font-medium text-streak">
+                    <Flame className="h-3.5 w-3.5 animate-streak-glow" />
                     {streak}
-                  </div>
+                  </span>
                 )}
-                <div className="flex items-center gap-0.5 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-extrabold text-primary">
-                  <Star className="h-3 w-3 text-xp" />
+                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[11px] font-medium text-primary">
                   Lv.{level}
-                </div>
+                </span>
               </div>
             </>
           )}
 
-          <div className="mx-1 h-5 w-px bg-border" />
+          <div className="mx-1.5 h-4 w-px bg-border" />
           <SoundToggle />
           <ThemeToggle />
           <a
             href="https://github.com/itsjustadarsh/clfc02-mock"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
-            <ExternalLink className="h-4 w-4" />
+            <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
 
         <div className="flex items-center gap-1 sm:hidden">
-          {/* Mobile gamification indicators */}
           {streak > 0 && (
-            <div className="flex items-center gap-0.5 text-xs font-extrabold text-streak mr-1">
-              <Flame className="h-4 w-4 animate-streak-glow" />
+            <span className="mr-1 flex items-center gap-0.5 text-xs font-medium text-streak">
+              <Flame className="h-3.5 w-3.5 animate-streak-glow" />
               {streak}
-            </div>
+            </span>
           )}
           <SoundToggle />
           <ThemeToggle />
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -108,29 +108,30 @@ export function Nav() {
       </div>
 
       {mobileOpen && (
-        <div className="border-t px-4 py-2 sm:hidden">
-          {links.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setMobileOpen(false)}
-              className={cn(
-                "flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold transition-colors",
-                pathname.startsWith(href)
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-muted"
-              )}
-            >
-              <Icon className="h-4.5 w-4.5" />
-              {label}
-            </Link>
-          ))}
+        <div className="border-t px-4 py-2 sm:hidden animate-fade-in">
+          {links.map(({ href, label, icon: Icon }) => {
+            const active = pathname === href || (href !== "/" && pathname.startsWith(href));
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                className={cn(
+                  "flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                  active ? "bg-primary/10 text-primary" : "text-muted-foreground hover:bg-muted"
+                )}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </Link>
+            );
+          })}
           <a
             href="https://github.com/itsjustadarsh/clfc02-mock"
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold text-muted-foreground hover:bg-muted"
+            className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted"
           >
             <ExternalLink className="h-4 w-4" />
             GitHub

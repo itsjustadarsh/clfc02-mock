@@ -31,26 +31,19 @@ export default function FlashcardsPage() {
   if (!started) {
     return (
       <div className="mx-auto max-w-md px-4 py-10 animate-fade-in">
-        <div className="rounded-2xl border bg-card p-6 text-center">
-          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500/10">
-            <Layers className="h-8 w-8 text-violet-500" />
+        <div className="rounded-xl border bg-card p-6 text-center">
+          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-xl bg-xp/10">
+            <Layers className="h-7 w-7 text-xp" />
           </div>
-          <h1 className="mb-1 text-xl font-extrabold">Flashcards</h1>
-          <p className="mb-5 text-sm text-muted-foreground">
-            Flip through questions and sort by confidence.
-          </p>
+          <h1 className="mb-1 text-lg font-semibold">Flashcards</h1>
+          <p className="mb-5 text-sm text-muted-foreground">Flip through questions and sort by confidence.</p>
 
           <div className="mb-4">
-            <p className="mb-2 text-sm font-bold">Domain</p>
+            <p className="mb-2 text-sm font-medium">Domain</p>
             <div className="flex flex-wrap justify-center gap-2">
               <button
                 onClick={() => { playClick(); setDomain(undefined); }}
-                className={cn(
-                  "btn-3d rounded-xl px-3.5 py-2 text-sm font-bold transition-all",
-                  domain === undefined
-                    ? "bg-primary text-white btn-shadow-primary"
-                    : "bg-muted btn-shadow-secondary"
-                )}
+                className={cn("btn rounded-lg px-3 py-2 text-sm", domain === undefined ? "btn-primary" : "btn-secondary")}
               >
                 All
               </button>
@@ -58,12 +51,7 @@ export default function FlashcardsPage() {
                 <button
                   key={d.id}
                   onClick={() => { playClick(); setDomain(d.id); }}
-                  className={cn(
-                    "btn-3d rounded-xl px-3.5 py-2 text-sm font-bold transition-all",
-                    domain === d.id
-                      ? "bg-primary text-white btn-shadow-primary"
-                      : "bg-muted btn-shadow-secondary"
-                  )}
+                  className={cn("btn rounded-lg px-3 py-2 text-sm", domain === d.id ? "btn-primary" : "btn-secondary")}
                 >
                   D{d.id}
                 </button>
@@ -72,18 +60,13 @@ export default function FlashcardsPage() {
           </div>
 
           <div className="mb-5">
-            <p className="mb-2 text-sm font-bold">Cards</p>
+            <p className="mb-2 text-sm font-medium">Cards</p>
             <div className="flex justify-center gap-2">
               {[10, 20, 30, 50].map((c) => (
                 <button
                   key={c}
                   onClick={() => { playClick(); setCount(c); }}
-                  className={cn(
-                    "btn-3d rounded-xl px-3.5 py-2 text-sm font-bold transition-all",
-                    count === c
-                      ? "bg-primary text-white btn-shadow-primary"
-                      : "bg-muted btn-shadow-secondary"
-                  )}
+                  className={cn("btn rounded-lg px-3 py-2 text-sm", count === c ? "btn-primary" : "btn-secondary")}
                 >
                   {c}
                 </button>

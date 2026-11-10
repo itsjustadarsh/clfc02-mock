@@ -16,8 +16,8 @@ export function WeakTopics({ mastery }: WeakTopicsProps) {
   if (weak.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-danger/20 bg-danger/5 p-4">
-      <div className="mb-3 flex items-center gap-2 text-sm font-semibold">
+    <div className="rounded-xl border border-danger/15 bg-danger/5 p-4">
+      <div className="mb-3 flex items-center gap-2 text-sm font-medium">
         <AlertTriangle className="h-4 w-4 text-danger" />
         Focus Areas
       </div>
@@ -34,9 +34,9 @@ export function WeakTopics({ mastery }: WeakTopicsProps) {
                 {m.accuracy}% accuracy ({m.correct}/{m.seen})
               </div>
             </div>
-            <div className="flex items-center gap-1 text-xs font-medium text-primary">
+            <span className="flex items-center gap-1 text-xs font-medium text-primary">
               Practice <ArrowRight className="h-3 w-3" />
-            </div>
+            </span>
           </Link>
         ))}
       </div>

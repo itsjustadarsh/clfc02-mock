@@ -11,17 +11,17 @@ export function XPBar({ xp }: XPBarProps) {
   const { current, next, progress, xpInLevel, xpForLevel } = getLevelProgress(xp);
 
   return (
-    <div className="rounded-xl border bg-card p-4 glow-purple">
+    <div className="card-glow p-4">
       <div className="mb-1 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 text-primary">
-            <span className="text-sm font-bold">{current.level}</span>
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/15 text-sm font-semibold text-primary">
+            {current.level}
           </div>
           <div>
-            <div className="text-sm font-bold">{current.title}</div>
+            <div className="text-sm font-medium">{current.title}</div>
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
               <Star className="h-3 w-3 text-xp" />
-              {xp.toLocaleString()} XP total
+              {xp.toLocaleString()} XP
             </div>
           </div>
         </div>
@@ -31,7 +31,7 @@ export function XPBar({ xp }: XPBarProps) {
           </div>
         )}
       </div>
-      <div className="mt-2 h-2.5 w-full overflow-hidden rounded-full bg-muted">
+      <div className="mt-2 h-2 w-full overflow-hidden rounded-full bg-muted">
         <div
           className="animate-shimmer h-full rounded-full transition-all duration-500"
           style={{ width: `${Math.max(progress * 100, 2)}%` }}

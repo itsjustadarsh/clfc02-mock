@@ -41,7 +41,6 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
   const [confirmSubmit, setConfirmSubmit] = useState(false);
   const [showAntiCheatBanner, setShowAntiCheatBanner] = useState(!!antiCheat);
 
-  // Gamification state passed to results
   const [xpResult, setXpResult] = useState<XPResult | null>(null);
   const [newAchievements, setNewAchievements] = useState<AchievementDef[]>([]);
   const [encouragingMsg, setEncouragingMsg] = useState("");
@@ -50,17 +49,13 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
   const { violations, requestFullscreen } = useAntiCheat(antiCheat ?? false);
 
   const handleExpire = useCallback(() => {
-    if (!quiz.isComplete) {
-      handleSubmit();
-    }
+    if (!quiz.isComplete) handleSubmit();
   }, [quiz.isComplete]);
 
   const timer = useTimer(timeLimit ?? 0, handleExpire);
 
   useEffect(() => {
-    if (timeLimit && timeLimit > 0) {
-      timer.start();
-    }
+    if (timeLimit && timeLimit > 0) timer.start();
   }, []);
 
   function handleSubmit() {
@@ -96,8 +91,6 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
     };
 
     saveAttempt(newAttempt);
-
-    // Gamification
     updateQuestionStats(results);
     addDailyProgress(questions.length);
     const xpEarned = calculateXPForAttempt(newAttempt);
@@ -111,7 +104,6 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
     setAttempt(newAttempt);
   }
 
-  // Keyboard shortcuts
   const optionKeys = quiz.currentQuestion
     ? Object.keys(quiz.currentQuestion.options).sort()
     : [];
@@ -158,20 +150,16 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
     const unanswered = quiz.totalQuestions - quiz.answeredCount;
     const flaggedCount = quiz.flagged.size;
     return (
-      <div className="mx-auto max-w-sm rounded-2xl border bg-card p-6 text-center animate-fade-in shadow-[0_4px_0_var(--border)]">
-        <h2 className="mb-2 text-lg font-extrabold">Submit Exam?</h2>
+      <div className="mx-auto max-w-sm rounded-xl border bg-card p-6 text-center animate-fade-in">
+        <h2 className="mb-2 text-lg font-semibold">Submit Exam?</h2>
         <p className="mb-1 text-sm text-muted-foreground">
           {quiz.answeredCount}/{quiz.totalQuestions} answered
         </p>
         {unanswered > 0 && (
-          <p className="text-xs font-bold text-amber-500">
-            {unanswered} unanswered
-          </p>
+          <p className="text-xs font-medium text-xp">{unanswered} unanswered</p>
         )}
         {flaggedCount > 0 && (
-          <p className="text-xs font-bold text-amber-500">
-            {flaggedCount} flagged
-          </p>
+          <p className="text-xs font-medium text-xp">{flaggedCount} flagged</p>
         )}
         <div className="mt-4 flex gap-3">
           <Button3D variant="ghost" size="md" onClick={() => setConfirmSubmit(false)} className="flex-1">
@@ -187,22 +175,18 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
 
   return (
     <div className="mx-auto max-w-3xl space-y-4">
-      {/* Anti-cheat banner */}
       {showAntiCheatBanner && (
         <div className="flex items-center justify-between rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-xs">
           <span className="text-muted-foreground">
-            Exam mode — tab switches are tracked
+            Exam mode — tab switches tracked
             {violations > 0 && (
               <span className="ml-1 font-medium text-danger">({violations} detected)</span>
             )}
           </span>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => {
-                requestFullscreen();
-                setShowAntiCheatBanner(false);
-              }}
-              className="flex items-center gap-1 rounded border px-2 py-1 font-medium text-primary transition-colors hover:bg-primary/10"
+              onClick={() => { requestFullscreen(); setShowAntiCheatBanner(false); }}
+              className="flex items-center gap-1 rounded-lg border px-2 py-1 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
             >
               <Maximize2 className="h-3 w-3" />
               Fullscreen
@@ -211,7 +195,7 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
               onClick={() => setShowAntiCheatBanner(false)}
               className="text-muted-foreground hover:text-foreground"
             >
-              x
+              ×
             </button>
           </div>
         </div>
@@ -237,9 +221,7 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
           <QuestionCard
             question={quiz.currentQuestion}
             selectedAnswers={quiz.currentAnswer}
-            onSelect={(selected) =>
-              quiz.selectAnswer(quiz.currentQuestion!.id, selected)
-            }
+            onSelect={(selected) => quiz.selectAnswer(quiz.currentQuestion!.id, selected)}
           />
         )}
       </div>

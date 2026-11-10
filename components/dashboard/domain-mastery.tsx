@@ -10,16 +10,16 @@ interface DomainMasteryProps {
 }
 
 const statusConfig = {
-  weak: { color: "text-danger", bg: "bg-danger", icon: AlertTriangle, label: "Needs Work" },
-  improving: { color: "text-amber-500", bg: "bg-amber-500", icon: TrendingUp, label: "Improving" },
-  strong: { color: "text-success", bg: "bg-success", icon: CheckCircle2, label: "Strong" },
-  unseen: { color: "text-muted-foreground", bg: "bg-muted-foreground", icon: HelpCircle, label: "Not Started" },
+  weak: { color: "text-danger", icon: AlertTriangle, label: "Needs Work" },
+  improving: { color: "text-xp", icon: TrendingUp, label: "Improving" },
+  strong: { color: "text-success", icon: CheckCircle2, label: "Strong" },
+  unseen: { color: "text-muted-foreground", icon: HelpCircle, label: "Not Started" },
 };
 
 export function DomainMasteryGrid({ mastery }: DomainMasteryProps) {
   return (
     <div className="rounded-xl border bg-card p-4">
-      <h3 className="mb-3 text-sm font-semibold">Domain Mastery</h3>
+      <h3 className="mb-3 text-sm font-medium">Domain Mastery</h3>
       <div className="grid grid-cols-2 gap-3">
         {mastery.map((m) => {
           const config = statusConfig[m.status];
@@ -28,19 +28,18 @@ export function DomainMasteryGrid({ mastery }: DomainMasteryProps) {
             <Link
               key={m.domain}
               href={`/practice/domain/${m.domain}`}
-              className="group rounded-lg border p-3 transition-colors hover:border-primary/30 hover:bg-muted/30"
+              className="group rounded-lg border p-3 transition-colors hover:border-primary/30"
             >
-              {/* Ring */}
               <div className="mb-2 flex items-center gap-3">
                 <div
-                  className="score-ring h-14 w-14 shrink-0"
+                  className="score-ring h-12 w-12 shrink-0"
                   style={{
                     background: m.status === "unseen"
                       ? "var(--muted)"
-                      : `conic-gradient(${m.accuracy >= 70 ? "var(--success)" : m.accuracy >= 50 ? "#eab308" : "var(--danger)"} ${m.accuracy * 3.6}deg, var(--muted) 0deg)`,
+                      : `conic-gradient(${m.accuracy >= 70 ? "var(--success)" : m.accuracy >= 50 ? "var(--xp)" : "var(--danger)"} ${m.accuracy * 3.6}deg, var(--muted) 0deg)`,
                   }}
                 >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-card text-sm font-bold">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-card text-xs font-medium">
                     {m.status === "unseen" ? "—" : `${m.accuracy}%`}
                   </div>
                 </div>
@@ -51,9 +50,7 @@ export function DomainMasteryGrid({ mastery }: DomainMasteryProps) {
                     {config.label}
                   </div>
                   {m.seen > 0 && (
-                    <div className="text-[10px] text-muted-foreground">
-                      {m.correct}/{m.seen} correct
-                    </div>
+                    <div className="text-[10px] text-muted-foreground">{m.correct}/{m.seen} correct</div>
                   )}
                 </div>
               </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import type { AchievementDef, AchievementStore } from "@/lib/types";
+import type { AchievementStore } from "@/lib/types";
 import { ACHIEVEMENTS } from "@/lib/gamification";
 import {
   Trophy, Star, Target, Crown, GraduationCap, Cloud, Shield, Cpu,
@@ -25,13 +25,11 @@ export function AchievementsShowcase({ store }: AchievementsShowcaseProps) {
   return (
     <div className="rounded-xl border bg-card p-4">
       <div className="mb-3 flex items-center justify-between">
-        <h3 className="text-sm font-semibold flex items-center gap-2">
+        <h3 className="flex items-center gap-2 text-sm font-medium">
           <Trophy className="h-4 w-4 text-primary" />
           Achievements
         </h3>
-        <span className="text-xs text-muted-foreground">
-          {unlockedCount}/{ACHIEVEMENTS.length}
-        </span>
+        <span className="text-xs text-muted-foreground">{unlockedCount}/{ACHIEVEMENTS.length}</span>
       </div>
       <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
         {ACHIEVEMENTS.map((achievement) => {
@@ -42,20 +40,18 @@ export function AchievementsShowcase({ store }: AchievementsShowcaseProps) {
               key={achievement.id}
               className={cn(
                 "flex flex-col items-center gap-1 rounded-lg p-2 text-center transition-colors",
-                unlocked
-                  ? "bg-primary/10"
-                  : "bg-muted/50 opacity-50"
+                unlocked ? "bg-primary/5" : "bg-muted/30 opacity-40"
               )}
               title={`${achievement.title}: ${achievement.description}`}
             >
               <div className={cn(
                 "flex h-8 w-8 items-center justify-center rounded-lg",
-                unlocked ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
+                unlocked ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"
               )}>
                 {unlocked ? <Icon className="h-4 w-4" /> : <Lock className="h-3.5 w-3.5" />}
               </div>
               <span className={cn(
-                "text-[9px] font-medium leading-tight",
+                "text-[9px] leading-tight",
                 unlocked ? "text-foreground" : "text-muted-foreground"
               )}>
                 {achievement.title}

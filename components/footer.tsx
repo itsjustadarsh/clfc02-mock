@@ -1,5 +1,3 @@
-import { ExternalLink } from "lucide-react";
-
 export function Footer() {
   return (
     <footer className="border-t">
@@ -9,9 +7,8 @@ export function Footer() {
           href="https://github.com/itsjustadarsh/clfc02-mock"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 transition-colors hover:text-foreground"
+          className="transition-colors hover:text-foreground"
         >
-          <ExternalLink className="h-3 w-3" />
           GitHub
         </a>
       </div>
