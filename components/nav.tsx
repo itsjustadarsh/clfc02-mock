@@ -2,16 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Cloud, BookOpen, ClipboardList, LayoutDashboard, Menu, X, ExternalLink, Flame, Star } from "lucide-react";
+import { Cloud, BookOpen, GraduationCap, LayoutDashboard, Menu, X, ExternalLink, Flame, Star } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
+import { SoundToggle } from "./ui/sound-toggle";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { getProfile, hasProfile } from "@/lib/storage";
 import { migrateExistingData, getLevelForXP } from "@/lib/gamification";
 
 const links = [
+  { href: "/learn", label: "Learn", icon: GraduationCap },
   { href: "/study", label: "Study", icon: BookOpen },
-  { href: "/practice", label: "Practice", icon: ClipboardList },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];
 
@@ -20,7 +21,6 @@ export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [streak, setStreak] = useState(0);
   const [level, setLevel] = useState(0);
-  const [xp, setXp] = useState(0);
 
   useEffect(() => {
     migrateExistingData();
@@ -28,15 +28,14 @@ export function Nav() {
       const p = getProfile();
       setStreak(p.streak);
       setLevel(p.level);
-      setXp(p.xp);
     }
-  }, [pathname]); // refresh on route change
+  }, [pathname]);
 
   return (
     <nav className="glass sticky top-0 z-50" style={{ boxShadow: "var(--shadow-sm)" }}>
-      <div className="mx-auto flex h-12 max-w-5xl items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-semibold" onClick={() => setMobileOpen(false)}>
-          <Cloud className="h-4.5 w-4.5 text-primary" />
+      <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4">
+        <Link href="/" className="flex items-center gap-2 font-extrabold" onClick={() => setMobileOpen(false)}>
+          <Cloud className="h-5 w-5 text-primary" />
           <span className="text-sm">CLF-C02</span>
         </Link>
 
@@ -46,13 +45,13 @@ export function Nav() {
               key={href}
               href={href}
               className={cn(
-                "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors",
+                "btn-3d flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-sm font-bold transition-all",
                 pathname.startsWith(href)
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-primary/15 text-primary shadow-[0_3px_0_#7c22ce30]"
+                  : "text-muted-foreground hover:bg-muted shadow-[0_3px_0_transparent]"
               )}
             >
-              <Icon className="h-3.5 w-3.5" />
+              <Icon className="h-4 w-4" />
               {label}
             </Link>
           ))}
@@ -60,15 +59,15 @@ export function Nav() {
           {/* Gamification indicators */}
           {level > 0 && (
             <>
-              <div className="mx-1 h-4 w-px bg-border" />
-              <div className="flex items-center gap-2 px-1.5">
+              <div className="mx-1.5 h-5 w-px bg-border" />
+              <div className="flex items-center gap-2.5 px-1">
                 {streak > 0 && (
-                  <div className="flex items-center gap-0.5 text-xs font-bold text-streak">
-                    <Flame className="h-3.5 w-3.5 animate-streak-glow" />
+                  <div className="flex items-center gap-0.5 text-xs font-extrabold text-streak">
+                    <Flame className="h-4 w-4 animate-streak-glow" />
                     {streak}
                   </div>
                 )}
-                <div className="flex items-center gap-0.5 text-xs font-medium text-primary">
+                <div className="flex items-center gap-0.5 rounded-full bg-primary/10 px-2 py-0.5 text-xs font-extrabold text-primary">
                   <Star className="h-3 w-3 text-xp" />
                   Lv.{level}
                 </div>
@@ -76,30 +75,32 @@ export function Nav() {
             </>
           )}
 
-          <div className="mx-1 h-4 w-px bg-border" />
+          <div className="mx-1 h-5 w-px bg-border" />
+          <SoundToggle />
+          <ThemeToggle />
           <a
             href="https://github.com/itsjustadarsh/clfc02-mock"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
           >
             <ExternalLink className="h-4 w-4" />
           </a>
-          <ThemeToggle />
         </div>
 
         <div className="flex items-center gap-1 sm:hidden">
           {/* Mobile gamification indicators */}
           {streak > 0 && (
-            <div className="flex items-center gap-0.5 text-xs font-bold text-streak mr-1">
-              <Flame className="h-3.5 w-3.5 animate-streak-glow" />
+            <div className="flex items-center gap-0.5 text-xs font-extrabold text-streak mr-1">
+              <Flame className="h-4 w-4 animate-streak-glow" />
               {streak}
             </div>
           )}
+          <SoundToggle />
           <ThemeToggle />
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -114,13 +115,13 @@ export function Nav() {
               href={href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                "flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold transition-colors",
                 pathname.startsWith(href)
                   ? "bg-primary/10 text-primary"
                   : "text-muted-foreground hover:bg-muted"
               )}
             >
-              <Icon className="h-4 w-4" />
+              <Icon className="h-4.5 w-4.5" />
               {label}
             </Link>
           ))}
@@ -129,7 +130,7 @@ export function Nav() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted"
+            className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-bold text-muted-foreground hover:bg-muted"
           >
             <ExternalLink className="h-4 w-4" />
             GitHub

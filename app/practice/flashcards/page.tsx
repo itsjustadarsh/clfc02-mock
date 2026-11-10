@@ -4,8 +4,11 @@ import { useState } from "react";
 import { selectFlashcards } from "@/lib/questions";
 import { DOMAINS } from "@/lib/types";
 import { FlashcardEngine } from "@/components/quiz/flashcard-engine";
+import { Button3D } from "@/components/ui/button-3d";
+import { playClick } from "@/lib/sounds";
 import type { Question } from "@/lib/types";
 import { Layers } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function FlashcardsPage() {
   const [started, setStarted] = useState(false);
@@ -28,37 +31,39 @@ export default function FlashcardsPage() {
   if (!started) {
     return (
       <div className="mx-auto max-w-md px-4 py-10 animate-fade-in">
-        <div className="rounded-xl border bg-card p-6 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-violet-500/10">
-            <Layers className="h-7 w-7 text-violet-500" />
+        <div className="rounded-2xl border bg-card p-6 text-center">
+          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-violet-500/10">
+            <Layers className="h-8 w-8 text-violet-500" />
           </div>
-          <h1 className="mb-1 text-xl font-bold">Flashcards</h1>
+          <h1 className="mb-1 text-xl font-extrabold">Flashcards</h1>
           <p className="mb-5 text-sm text-muted-foreground">
             Flip through questions and sort by confidence.
           </p>
 
           <div className="mb-4">
-            <p className="mb-2 text-sm font-medium">Domain</p>
-            <div className="flex flex-wrap justify-center gap-1.5">
+            <p className="mb-2 text-sm font-bold">Domain</p>
+            <div className="flex flex-wrap justify-center gap-2">
               <button
-                onClick={() => setDomain(undefined)}
-                className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+                onClick={() => { playClick(); setDomain(undefined); }}
+                className={cn(
+                  "btn-3d rounded-xl px-3.5 py-2 text-sm font-bold transition-all",
                   domain === undefined
-                    ? "border-primary bg-primary/10 text-primary"
-                    : "hover:bg-muted"
-                }`}
+                    ? "bg-primary text-white btn-shadow-primary"
+                    : "bg-muted btn-shadow-secondary"
+                )}
               >
                 All
               </button>
               {DOMAINS.map((d) => (
                 <button
                   key={d.id}
-                  onClick={() => setDomain(d.id)}
-                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+                  onClick={() => { playClick(); setDomain(d.id); }}
+                  className={cn(
+                    "btn-3d rounded-xl px-3.5 py-2 text-sm font-bold transition-all",
                     domain === d.id
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "hover:bg-muted"
-                  }`}
+                      ? "bg-primary text-white btn-shadow-primary"
+                      : "bg-muted btn-shadow-secondary"
+                  )}
                 >
                   D{d.id}
                 </button>
@@ -67,17 +72,18 @@ export default function FlashcardsPage() {
           </div>
 
           <div className="mb-5">
-            <p className="mb-2 text-sm font-medium">Cards</p>
-            <div className="flex justify-center gap-1.5">
+            <p className="mb-2 text-sm font-bold">Cards</p>
+            <div className="flex justify-center gap-2">
               {[10, 20, 30, 50].map((c) => (
                 <button
                   key={c}
-                  onClick={() => setCount(c)}
-                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors ${
+                  onClick={() => { playClick(); setCount(c); }}
+                  className={cn(
+                    "btn-3d rounded-xl px-3.5 py-2 text-sm font-bold transition-all",
                     count === c
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "hover:bg-muted"
-                  }`}
+                      ? "bg-primary text-white btn-shadow-primary"
+                      : "bg-muted btn-shadow-secondary"
+                  )}
                 >
                   {c}
                 </button>
@@ -85,12 +91,9 @@ export default function FlashcardsPage() {
             </div>
           </div>
 
-          <button
-            onClick={start}
-            className="w-full rounded-lg bg-primary px-6 py-2.5 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-          >
+          <Button3D variant="primary" size="lg" onClick={start} className="w-full">
             Start Flashcards
-          </button>
+          </Button3D>
         </div>
       </div>
     );

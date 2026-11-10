@@ -2,6 +2,7 @@
 
 import type { Question } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { playSelect } from "@/lib/sounds";
 import { CheckCircle2, XCircle, Circle, Square, CheckSquare } from "lucide-react";
 
 interface QuestionCardProps {
@@ -24,6 +25,7 @@ export function QuestionCard({
 
   function handleOptionClick(key: string) {
     if (disabled || showResult) return;
+    playSelect();
 
     if (question.isMultiAnswer) {
       const newSelected = selectedAnswers.includes(key)
@@ -49,15 +51,15 @@ export function QuestionCard({
   return (
     <div>
       <div className="mb-4">
-        <p className="text-base font-medium leading-relaxed">{question.question}</p>
+        <p className="text-base font-bold leading-relaxed">{question.question}</p>
         {question.isMultiAnswer && (
-          <p className="mt-1.5 text-xs text-muted-foreground">
+          <p className="mt-1.5 text-xs font-medium text-muted-foreground">
             Select {correctAnswers.length} answers
           </p>
         )}
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {optionKeys.map((key, index) => {
           const state = getOptionState(key);
           const isSelected = selectedAnswers.includes(key);
@@ -71,32 +73,31 @@ export function QuestionCard({
               onClick={() => handleOptionClick(key)}
               disabled={disabled || showResult}
               className={cn(
-                "flex w-full items-start gap-2.5 rounded-lg border p-3 text-left text-sm transition-all",
-                state === "default" && "border-border hover:border-muted-foreground/30 hover:bg-muted/50",
-                state === "selected" && "border-primary bg-primary/5",
-                state === "correct" && "border-success bg-success/5 border-l-3 border-l-success",
-                state === "incorrect" && "border-danger bg-danger/5 border-l-3 border-l-danger",
+                "option-3d flex w-full items-start gap-3 p-3.5 text-left text-sm",
+                state === "selected" && "selected",
+                state === "correct" && "correct",
+                state === "incorrect" && "incorrect",
                 (disabled || showResult) && "cursor-default"
               )}
             >
               <div className="mt-0.5 shrink-0">
                 {showResult && state === "correct" ? (
-                  <CheckCircle2 className="h-4 w-4 text-success" />
+                  <CheckCircle2 className="h-4.5 w-4.5 text-success" />
                 ) : showResult && state === "incorrect" ? (
-                  <XCircle className="h-4 w-4 text-danger" />
+                  <XCircle className="h-4.5 w-4.5 text-danger" />
                 ) : (
                   <Icon className={cn(
-                    "h-4 w-4",
+                    "h-4.5 w-4.5",
                     isSelected ? "text-primary" : "text-muted-foreground"
                   )} />
                 )}
               </div>
-              <div>
-                <span className="font-medium text-muted-foreground">{key}.</span>{" "}
-                <span>{question.options[key]}</span>
+              <div className="flex-1">
+                <span className="font-bold text-muted-foreground">{key}.</span>{" "}
+                <span className="font-medium">{question.options[key]}</span>
               </div>
               {!showResult && !disabled && (
-                <kbd className="ml-auto shrink-0 self-center rounded bg-muted px-1 py-0.5 font-mono text-[10px] text-muted-foreground">
+                <kbd className="ml-auto shrink-0 self-center rounded-lg bg-muted px-1.5 py-0.5 font-mono text-[10px] font-bold text-muted-foreground">
                   {index + 1}
                 </kbd>
               )}
@@ -106,8 +107,8 @@ export function QuestionCard({
       </div>
 
       {showResult && question.explanation && (
-        <div className="mt-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
-          <p className="text-xs font-medium text-primary">Explanation</p>
+        <div className="mt-3 rounded-2xl border border-primary/20 bg-primary/5 p-3">
+          <p className="text-xs font-bold text-primary">Explanation</p>
           <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{question.explanation}</p>
         </div>
       )}

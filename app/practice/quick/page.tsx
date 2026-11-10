@@ -3,8 +3,11 @@
 import { useState } from "react";
 import { selectQuickQuiz } from "@/lib/questions";
 import { QuizEngine } from "@/components/quiz/quiz-engine";
+import { Button3D } from "@/components/ui/button-3d";
+import { playClick } from "@/lib/sounds";
 import type { Question } from "@/lib/types";
 import { Zap } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function QuickQuizPage() {
   const [started, setStarted] = useState(false);
@@ -21,25 +24,26 @@ export default function QuickQuizPage() {
   if (!started) {
     return (
       <div className="mx-auto max-w-md px-4 py-10 animate-fade-in">
-        <div className="rounded-xl border bg-card p-6 text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-green-500/10">
-            <Zap className="h-7 w-7 text-green-500" />
+        <div className="rounded-2xl border bg-card p-6 text-center">
+          <div className="mx-auto mb-3 flex h-16 w-16 items-center justify-center rounded-2xl bg-green-500/10">
+            <Zap className="h-8 w-8 text-green-500" />
           </div>
-          <h1 className="mb-1 text-xl font-bold">Quick Quiz</h1>
+          <h1 className="mb-1 text-xl font-extrabold">Quick Quiz</h1>
           <p className="mb-4 text-sm text-muted-foreground">Random questions, no timer.</p>
 
           <div className="mb-5">
-            <p className="mb-2 text-sm font-medium">Questions</p>
-            <div className="flex justify-center gap-1.5">
+            <p className="mb-2 text-sm font-bold">Questions</p>
+            <div className="flex justify-center gap-2">
               {[10, 15, 20, 30].map((c) => (
                 <button
                   key={c}
-                  onClick={() => setCount(c)}
-                  className={`rounded-lg border px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                  onClick={() => { playClick(); setCount(c); }}
+                  className={cn(
+                    "btn-3d rounded-xl px-4 py-2 text-sm font-bold transition-all",
                     count === c
-                      ? "border-primary bg-primary/10 text-primary"
-                      : "hover:bg-muted"
-                  }`}
+                      ? "bg-primary text-white btn-shadow-primary"
+                      : "bg-muted btn-shadow-secondary"
+                  )}
                 >
                   {c}
                 </button>
@@ -47,12 +51,9 @@ export default function QuickQuizPage() {
             </div>
           </div>
 
-          <button
-            onClick={start}
-            className="w-full rounded-lg bg-primary px-6 py-2.5 font-semibold text-primary-foreground transition-colors hover:bg-primary/90"
-          >
+          <Button3D variant="success" size="lg" onClick={start} className="w-full">
             Start Quiz
-          </button>
+          </Button3D>
         </div>
       </div>
     );

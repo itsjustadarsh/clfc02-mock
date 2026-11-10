@@ -22,6 +22,8 @@ import { QuizTimer } from "./quiz-timer";
 import { QuizProgress } from "./quiz-progress";
 import { QuizNavigation } from "./quiz-navigation";
 import { QuizResults } from "./quiz-results";
+import { Button3D } from "@/components/ui/button-3d";
+import { playClick } from "@/lib/sounds";
 import { Maximize2 } from "lucide-react";
 
 interface QuizEngineProps {
@@ -156,34 +158,28 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
     const unanswered = quiz.totalQuestions - quiz.answeredCount;
     const flaggedCount = quiz.flagged.size;
     return (
-      <div className="mx-auto max-w-sm rounded-xl border bg-card p-6 text-center animate-fade-in">
-        <h2 className="mb-2 text-lg font-bold">Submit Exam?</h2>
+      <div className="mx-auto max-w-sm rounded-2xl border bg-card p-6 text-center animate-fade-in shadow-[0_4px_0_var(--border)]">
+        <h2 className="mb-2 text-lg font-extrabold">Submit Exam?</h2>
         <p className="mb-1 text-sm text-muted-foreground">
           {quiz.answeredCount}/{quiz.totalQuestions} answered
         </p>
         {unanswered > 0 && (
-          <p className="text-xs text-amber-500">
+          <p className="text-xs font-bold text-amber-500">
             {unanswered} unanswered
           </p>
         )}
         {flaggedCount > 0 && (
-          <p className="text-xs text-amber-500">
+          <p className="text-xs font-bold text-amber-500">
             {flaggedCount} flagged
           </p>
         )}
-        <div className="mt-4 flex gap-2">
-          <button
-            onClick={() => setConfirmSubmit(false)}
-            className="flex-1 rounded-lg border px-3 py-2 text-sm font-medium transition-colors hover:bg-muted"
-          >
+        <div className="mt-4 flex gap-3">
+          <Button3D variant="ghost" size="md" onClick={() => setConfirmSubmit(false)} className="flex-1">
             Go Back
-          </button>
-          <button
-            onClick={handleSubmit}
-            className="flex-1 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-          >
+          </Button3D>
+          <Button3D variant="primary" size="md" onClick={handleSubmit} className="flex-1">
             Submit
-          </button>
+          </Button3D>
         </div>
       </div>
     );
