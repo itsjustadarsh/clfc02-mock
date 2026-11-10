@@ -5,7 +5,9 @@ import type { Question } from "@/lib/types";
 import { DOMAINS } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
-import { Check, RotateCcw, SkipForward, ArrowLeft, ArrowRight, Layers } from "lucide-react";
+import { addXP, addDailyProgress } from "@/lib/gamification";
+import { toast } from "sonner";
+import { Check, RotateCcw, SkipForward, ArrowLeft, ArrowRight, Layers, Star } from "lucide-react";
 
 interface FlashcardEngineProps {
   questions: Question[];
@@ -46,6 +48,9 @@ export function FlashcardEngine({ questions, onReset }: FlashcardEngineProps) {
       n.delete(card.id);
       return n;
     });
+    // Award 3 XP for mastered card
+    addXP(3);
+    addDailyProgress(1);
     goNext();
   }, [card, goNext]);
 
@@ -86,6 +91,13 @@ export function FlashcardEngine({ questions, onReset }: FlashcardEngineProps) {
           <p className="mb-5 text-sm text-muted-foreground">
             {reviewMode ? "Review round finished" : `${cards.length} cards studied`}
           </p>
+
+          {knownCount > 0 && (
+            <div className="mb-3 flex items-center justify-center gap-1.5 text-xp animate-xp-pop">
+              <Star className="h-4 w-4" />
+              <span className="text-sm font-bold">+{knownCount * 3} XP earned</span>
+            </div>
+          )}
 
           <div className="mb-5 grid grid-cols-3 gap-3 text-center">
             <div className="rounded-lg bg-success/10 p-3">

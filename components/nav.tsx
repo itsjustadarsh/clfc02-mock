@@ -2,20 +2,35 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Cloud, BookOpen, ClipboardList, History, Menu, X, ExternalLink } from "lucide-react";
+import { Cloud, BookOpen, ClipboardList, LayoutDashboard, Menu, X, ExternalLink, Flame, Star } from "lucide-react";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getProfile, hasProfile } from "@/lib/storage";
+import { migrateExistingData, getLevelForXP } from "@/lib/gamification";
 
 const links = [
   { href: "/study", label: "Study", icon: BookOpen },
   { href: "/practice", label: "Practice", icon: ClipboardList },
-  { href: "/history", label: "History", icon: History },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
 ];
 
 export function Nav() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [streak, setStreak] = useState(0);
+  const [level, setLevel] = useState(0);
+  const [xp, setXp] = useState(0);
+
+  useEffect(() => {
+    migrateExistingData();
+    if (hasProfile()) {
+      const p = getProfile();
+      setStreak(p.streak);
+      setLevel(p.level);
+      setXp(p.xp);
+    }
+  }, [pathname]); // refresh on route change
 
   return (
     <nav className="glass sticky top-0 z-50" style={{ boxShadow: "var(--shadow-sm)" }}>
@@ -41,6 +56,26 @@ export function Nav() {
               {label}
             </Link>
           ))}
+
+          {/* Gamification indicators */}
+          {level > 0 && (
+            <>
+              <div className="mx-1 h-4 w-px bg-border" />
+              <div className="flex items-center gap-2 px-1.5">
+                {streak > 0 && (
+                  <div className="flex items-center gap-0.5 text-xs font-bold text-streak">
+                    <Flame className="h-3.5 w-3.5 animate-streak-glow" />
+                    {streak}
+                  </div>
+                )}
+                <div className="flex items-center gap-0.5 text-xs font-medium text-primary">
+                  <Star className="h-3 w-3 text-xp" />
+                  Lv.{level}
+                </div>
+              </div>
+            </>
+          )}
+
           <div className="mx-1 h-4 w-px bg-border" />
           <a
             href="https://github.com/itsjustadarsh/clfc02-mock"
@@ -54,6 +89,13 @@ export function Nav() {
         </div>
 
         <div className="flex items-center gap-1 sm:hidden">
+          {/* Mobile gamification indicators */}
+          {streak > 0 && (
+            <div className="flex items-center gap-0.5 text-xs font-bold text-streak mr-1">
+              <Flame className="h-3.5 w-3.5 animate-streak-glow" />
+              {streak}
+            </div>
+          )}
           <ThemeToggle />
           <button
             onClick={() => setMobileOpen(!mobileOpen)}

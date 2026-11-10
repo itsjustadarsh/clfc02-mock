@@ -126,3 +126,62 @@ export interface ComparisonTable {
   headers: string[];
   rows: string[][];
 }
+
+// Gamification types
+
+export interface UserProfile {
+  xp: number;
+  level: number;
+  streak: number;
+  lastActiveDate: string;
+  dailyGoal: number;
+  dailyProgress: number;
+  dailyProgressDate: string;
+  joinDate: string;
+  warningDismissed?: boolean;
+}
+
+export interface QuestionStat {
+  seen: number;
+  correct: number;
+  lastSeen: string;
+}
+
+export type QuestionStats = Record<string, QuestionStat>;
+
+export interface AchievementRecord {
+  unlockedAt: string;
+}
+
+export type AchievementStore = Record<string, AchievementRecord>;
+
+export interface LevelDef {
+  level: number;
+  title: string;
+  xpRequired: number;
+}
+
+export interface AchievementDef {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  category: "progress" | "streak" | "mastery" | "special" | "level";
+}
+
+export interface DomainMastery {
+  domain: number;
+  name: string;
+  accuracy: number;
+  seen: number;
+  correct: number;
+  status: "weak" | "improving" | "strong" | "unseen";
+}
+
+export interface XPResult {
+  newXP: number;
+  totalXP: number;
+  leveledUp: boolean;
+  oldLevel: number;
+  newLevel: number;
+}

@@ -5,7 +5,8 @@ import Link from "next/link";
 import type { QuizAttempt, QuizMode } from "@/lib/types";
 import { DOMAINS } from "@/lib/types";
 import { getAttempts, clearHistory, getStreak, getTotalQuestionsAnswered } from "@/lib/storage";
-import { Trash2, Eye, History, Flame } from "lucide-react";
+import { calculateXPForAttempt } from "@/lib/gamification";
+import { Trash2, Eye, History, Flame, LayoutDashboard, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -51,15 +52,24 @@ export default function HistoryPage() {
     <div className="mx-auto max-w-5xl px-4 py-8 animate-fade-in">
       <div className="mb-5 flex items-center justify-between">
         <h1 className="text-2xl font-bold">History</h1>
-        {attempts.length > 0 && (
-          <button
-            onClick={handleClear}
-            className="flex items-center gap-1 rounded-lg border border-danger/30 px-2.5 py-1.5 text-xs font-medium text-danger transition-colors hover:bg-danger/10"
+        <div className="flex items-center gap-2">
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
           >
-            <Trash2 className="h-3.5 w-3.5" />
-            Clear
-          </button>
-        )}
+            <LayoutDashboard className="h-3.5 w-3.5" />
+            Dashboard
+          </Link>
+          {attempts.length > 0 && (
+            <button
+              onClick={handleClear}
+              className="flex items-center gap-1 rounded-lg border border-danger/30 px-2.5 py-1.5 text-xs font-medium text-danger transition-colors hover:bg-danger/10"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              Clear
+            </button>
+          )}
+        </div>
       </div>
 
       {attempts.length > 0 && (
@@ -89,7 +99,7 @@ export default function HistoryPage() {
             <div className="rounded-lg border bg-card p-3">
               <div className="text-[10px] text-muted-foreground">Streak</div>
               <div className="flex items-center gap-1 text-xl font-bold">
-                {streak > 0 && <Flame className="h-4 w-4 text-primary" />}
+                {streak > 0 && <Flame className="h-4 w-4 text-streak animate-streak-glow" />}
                 {streak}d
               </div>
             </div>
@@ -161,6 +171,7 @@ export default function HistoryPage() {
                 : attempt.mode === "domain"
                   ? `D${attempt.domain}: ${DOMAINS.find((d) => d.id === attempt.domain)?.shortName ?? ""}`
                   : "Quick Quiz";
+            const xp = calculateXPForAttempt(attempt);
 
             return (
               <div
@@ -182,6 +193,10 @@ export default function HistoryPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
+                  <span className="flex items-center gap-0.5 text-[10px] font-medium text-xp">
+                    <Star className="h-3 w-3" />
+                    +{xp}
+                  </span>
                   <span
                     className={cn(
                       "rounded-full px-2 py-0.5 text-[10px] font-medium",

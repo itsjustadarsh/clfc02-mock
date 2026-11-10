@@ -2,13 +2,21 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import type { Question, QuizMode, QuizAttempt } from "@/lib/types";
+import type { Question, QuizMode, QuizAttempt, AchievementDef, XPResult } from "@/lib/types";
 import { useQuiz } from "@/hooks/use-quiz";
 import { useTimer } from "@/hooks/use-timer";
 import { useAntiCheat } from "@/hooks/use-anti-cheat";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { calculateScore, calculateDomainBreakdown, isPassing } from "@/lib/scoring";
-import { saveAttempt, generateId } from "@/lib/storage";
+import { saveAttempt, generateId, getProfile } from "@/lib/storage";
+import {
+  calculateXPForAttempt,
+  addXP,
+  addDailyProgress,
+  updateQuestionStats,
+  checkAchievements,
+  getEncouragingMessage,
+} from "@/lib/gamification";
 import { QuestionCard } from "./question-card";
 import { QuizTimer } from "./quiz-timer";
 import { QuizProgress } from "./quiz-progress";
@@ -30,6 +38,11 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
   const [attempt, setAttempt] = useState<QuizAttempt | null>(null);
   const [confirmSubmit, setConfirmSubmit] = useState(false);
   const [showAntiCheatBanner, setShowAntiCheatBanner] = useState(!!antiCheat);
+
+  // Gamification state passed to results
+  const [xpResult, setXpResult] = useState<XPResult | null>(null);
+  const [newAchievements, setNewAchievements] = useState<AchievementDef[]>([]);
+  const [encouragingMsg, setEncouragingMsg] = useState("");
 
   const quiz = useQuiz(questions);
   const { violations, requestFullscreen } = useAntiCheat(antiCheat ?? false);
@@ -81,6 +94,18 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
     };
 
     saveAttempt(newAttempt);
+
+    // Gamification
+    updateQuestionStats(results);
+    addDailyProgress(questions.length);
+    const xpEarned = calculateXPForAttempt(newAttempt);
+    const xpRes = addXP(xpEarned);
+    const profile = getProfile();
+    const achievements = checkAchievements(newAttempt, profile);
+
+    setXpResult(xpRes);
+    setNewAchievements(achievements);
+    setEncouragingMsg(getEncouragingMessage(newAttempt.passed));
     setAttempt(newAttempt);
   }
 
@@ -116,7 +141,15 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
   useKeyboardShortcuts(shortcutHandlers, !attempt && !confirmSubmit);
 
   if (attempt) {
-    return <QuizResults attempt={attempt} onRetry={onRetry} />;
+    return (
+      <QuizResults
+        attempt={attempt}
+        onRetry={onRetry}
+        xpResult={xpResult}
+        newAchievements={newAchievements}
+        encouragingMessage={encouragingMsg}
+      />
+    );
   }
 
   if (confirmSubmit) {
@@ -182,7 +215,7 @@ export function QuizEngine({ questions, mode, domain, timeLimit, antiCheat, onRe
               onClick={() => setShowAntiCheatBanner(false)}
               className="text-muted-foreground hover:text-foreground"
             >
-              ×
+              x
             </button>
           </div>
         </div>

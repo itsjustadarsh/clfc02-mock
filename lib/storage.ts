@@ -1,22 +1,27 @@
-import type { QuizAttempt } from "./types";
+import type { QuizAttempt, UserProfile, QuestionStats, AchievementStore } from "./types";
 
-const STORAGE_KEY = "clf-c02-attempts";
+const ATTEMPTS_KEY = "clf-c02-attempts";
+const PROFILE_KEY = "clf-c02-profile";
+const QUESTION_STATS_KEY = "clf-c02-question-stats";
+const ACHIEVEMENTS_KEY = "clf-c02-achievements";
 
 function isBrowser(): boolean {
   return typeof window !== "undefined";
 }
 
+// --- Attempts ---
+
 export function saveAttempt(attempt: QuizAttempt): void {
   if (!isBrowser()) return;
   const attempts = getAttempts();
   attempts.unshift(attempt);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(attempts));
+  localStorage.setItem(ATTEMPTS_KEY, JSON.stringify(attempts));
 }
 
 export function getAttempts(): QuizAttempt[] {
   if (!isBrowser()) return [];
   try {
-    const data = localStorage.getItem(STORAGE_KEY);
+    const data = localStorage.getItem(ATTEMPTS_KEY);
     return data ? JSON.parse(data) : [];
   } catch {
     return [];
@@ -29,7 +34,7 @@ export function getAttempt(id: string): QuizAttempt | undefined {
 
 export function clearHistory(): void {
   if (!isBrowser()) return;
-  localStorage.removeItem(STORAGE_KEY);
+  localStorage.removeItem(ATTEMPTS_KEY);
 }
 
 export function generateId(): string {
@@ -60,4 +65,72 @@ export function getStreak(): number {
 
 export function getTotalQuestionsAnswered(): number {
   return getAttempts().reduce((sum, a) => sum + a.totalQuestions, 0);
+}
+
+// --- Profile ---
+
+const DEFAULT_PROFILE: UserProfile = {
+  xp: 0,
+  level: 1,
+  streak: 0,
+  lastActiveDate: "",
+  dailyGoal: 20,
+  dailyProgress: 0,
+  dailyProgressDate: "",
+  joinDate: new Date().toISOString().split("T")[0],
+};
+
+export function getProfile(): UserProfile {
+  if (!isBrowser()) return { ...DEFAULT_PROFILE };
+  try {
+    const data = localStorage.getItem(PROFILE_KEY);
+    if (data) return JSON.parse(data);
+    return { ...DEFAULT_PROFILE };
+  } catch {
+    return { ...DEFAULT_PROFILE };
+  }
+}
+
+export function saveProfile(profile: UserProfile): void {
+  if (!isBrowser()) return;
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+}
+
+export function hasProfile(): boolean {
+  if (!isBrowser()) return false;
+  return localStorage.getItem(PROFILE_KEY) !== null;
+}
+
+// --- Question Stats ---
+
+export function getQuestionStats(): QuestionStats {
+  if (!isBrowser()) return {};
+  try {
+    const data = localStorage.getItem(QUESTION_STATS_KEY);
+    return data ? JSON.parse(data) : {};
+  } catch {
+    return {};
+  }
+}
+
+export function saveQuestionStats(stats: QuestionStats): void {
+  if (!isBrowser()) return;
+  localStorage.setItem(QUESTION_STATS_KEY, JSON.stringify(stats));
+}
+
+// --- Achievements ---
+
+export function getAchievementStore(): AchievementStore {
+  if (!isBrowser()) return {};
+  try {
+    const data = localStorage.getItem(ACHIEVEMENTS_KEY);
+    return data ? JSON.parse(data) : {};
+  } catch {
+    return {};
+  }
+}
+
+export function saveAchievementStore(store: AchievementStore): void {
+  if (!isBrowser()) return;
+  localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify(store));
 }
